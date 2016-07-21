@@ -22,19 +22,31 @@ def acMain(ac_version):
     ac.setSize(bReset, 60, 20)
     ac.setPosition(bReset, 85, 50)
     ac.addOnClickedListener(bReset, ResetLapsCount)
-    ac.console("ACLapCounter::reset button setted")
+    #ac.console("ACLapCounter::reset button setted")
     return "ACLapCounter"
 
 def acUpdate(deltaT):
     global l_lapcount, lapcount, total
     laps = ac.getCarState(0, acsys.CS.LapCount)
-    ac.console("ACLapCounter:: laps:{}  lapcount:{}".format(laps, lapcount))
+    #ac.console("ACLapCounter:: laps:{}  lapcount:{}".format(laps, lapcount))
     if laps > lapcount:
+        ac.console("ACLapCounter::New lap")
         lapcount = laps
         total = total + 1
         ac.setText(l_lapcount, "Laps: {}".format(total))
+    elif total > laps:
+        ac.console("ACLapCounter::Session start")
+        SessionStart("ACLapCounter", "Restart")
 
 def ResetLapsCount(name, event):
-    global total, l_lapcount
+    global total, l_lapcount, lapcount
+    ac.console("ACLapCounter::ResetLapsCount()")
     total = 0
+    ac.setText(l_lapcount, "Laps: {}".format(total))
+
+def SessionStart(name, event):
+    global total, l_lapcount, lapcount
+    ac.console("ACLapCounter::ResetLapsCount()")
+    total = 0
+    lapcount = 0
     ac.setText(l_lapcount, "Laps: {}".format(total))
